@@ -1,0 +1,19 @@
+!!!
+html(lang="en")
+	head
+		meta(charset="utf-8")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+		title Maelstrom Node Test
+		meta(name="viewport", content="width=device-width,initial-scale=1")
+		block styles
+			link(rel="stylesheet", href="/index.css")
+		block scripts
+	body(data-csrf=token)
+		.header
+			block header
+				h1 Test App
+		.content
+			block content
+		.footer
+			block footer
+				| Project Maelstrom &copy; 2012

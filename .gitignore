@@ -6,9 +6,11 @@ lib-cov
 *.out
 *.pid
 *.gz
+.env
 
 pids
 logs
+db
 results
 
 node_modules
