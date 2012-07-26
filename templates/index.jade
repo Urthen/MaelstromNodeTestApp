@@ -1,4 +1,16 @@
 extends base
 
+block scripts
+	script(src=apiHost + "/js/api.js", type="text/javascript")
+
 block content
 	p LOG DAT SHIT IN
+	#MaelstromLogin INJECT CONTENT HERE DOOD!
+
+	script(type="text/javascript")
+		maelstrom.configure({
+			announce: "#{selfHost + '/announce.json'}"
+		});
+		maelstrom.loginWidget(function() {
+			console.log("Logins happen!")
+		});
