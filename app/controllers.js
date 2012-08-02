@@ -13,4 +13,8 @@ module.exports = function(app){
 	app.get('/', renderIndex);
 
 	app.post('/', renderIndex);
+
+	app.get('/callback', function (req, res) {
+		res.end("Code: " + req.query.code);
+	})
 };
