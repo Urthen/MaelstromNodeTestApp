@@ -1,7 +1,7 @@
 var express = require("express");
 
 var config = {},
-	port = process.env.PORT || 5001;
+	port = process.env.PORT || 4000;
 
 config.port = port;
 config.env = process.env.NODE_ENV;
