@@ -4,7 +4,11 @@ block scripts
 	script(src=apiHost + "/js/api.js", type="text/javascript")
 
 block content
-	p LOG DAT SHIT IN
+	if name
+		p U R #{name}
+	else
+		p LOG DAT SHIT IN
+
 	#MaelstromLogin INJECT CONTENT HERE DOOD!
 
 	script(type="text/javascript")

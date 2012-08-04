@@ -1,4 +1,49 @@
-var http = require('http');
+var http = require('http'),
+	deferred = require('deferred');
+
+function exchangeCode(code) {
+	var options = {
+			host: 'prototype.projectmaelstrom.com',
+			port: 5000,
+			path: "/module/token/exchange?code=" + code,
+			method: 'GET'
+		},
+		def = deferred();
+	http.get(options, function (agent) {
+		var data = ''
+		agent.on('data', function (chunk) {
+			data += chunk;
+		});
+		agent.on('end', function () {
+			def.resolve(data);
+		});
+		
+	});
+
+	return def.promise;
+}
+
+function getTokenInfo(token) {
+	var options = {
+			host: 'prototype.projectmaelstrom.com',
+			port: 5000,
+			path: "/module/token/info?token=" + token,
+			method: 'GET'
+		},
+		def = deferred();
+	http.get(options, function (agent) {
+		var data = ''
+		agent.on('data', function (chunk) {
+			data += chunk;
+		});
+		agent.on('end', function () {
+			def.resolve(JSON.parse(data));
+		});
+		
+	});
+
+	return def.promise;	
+}
 
 module.exports = function(app){
 
@@ -7,9 +52,14 @@ module.exports = function(app){
 		selfHost = isProd ? 'http://nodetest.projectmaelstrom.com' : 'http://nodetest.projectmaelstrom.com:4000';
 
 	function renderIndex(req, res) {
-		var user = "",
-			credentials = {};
-		res.render('index', {user: req.user, apiHost: apiHost, selfHost: selfHost});
+		if (req.session.token) {
+			getTokenInfo(req.session.token)(function (info) {
+				res.render('index', {name: info.name, apiHost: apiHost, selfHost: selfHost});	
+			});
+		} else {
+			res.render('index', {apiHost: apiHost, selfHost: selfHost});
+		}
+		
 	};
 
 	app.get('/', renderIndex);
@@ -17,24 +67,9 @@ module.exports = function(app){
 	app.post('/', renderIndex);
 
 	app.get('/callback', function (req, res) {
-		var options = {
-				host: 'prototype.projectmaelstrom.com',
-				port: 5000,
-				path: "/module/token/exchange?code=" + req.query.code,
-				method: 'GET'
-			};
-		console.log("getting", options)
-		http.get(options, function (agent) {
-			var data = ''
-			agent.on('data', function (chunk) {
-				data += chunk;
-			});
-			agent.on('end', function () {
-				res.end("Code: " + req.query.code + " exchanged for Token: " + data);
-			});
-			
-		}).on('error', function (e) {
-			res.end("Error: " + e.message);
+		exchangeCode(req.query.code)(function (token) {
+			req.session.token = token;
+			res.redirect('/')
 		});
-	})
+	});
 };
