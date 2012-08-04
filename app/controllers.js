@@ -1,4 +1,27 @@
-var http = require('http');
+var http = require('http'),
+	deferred = require('deferred');
+
+function exchangeCode(code) {
+	var options = {
+			host: 'prototype.projectmaelstrom.com',
+			port: 5000,
+			path: "/module/token/exchange?code=" + code,
+			method: 'GET'
+		},
+		def = deferred();
+	http.get(options, function (agent) {
+		var data = ''
+		agent.on('data', function (chunk) {
+			data += chunk;
+		});
+		agent.on('end', function () {
+			def.resolve(data);
+		});
+		
+	});
+
+	return def.promise;
+}
 
 module.exports = function(app){
 
@@ -17,24 +40,8 @@ module.exports = function(app){
 	app.post('/', renderIndex);
 
 	app.get('/callback', function (req, res) {
-		var options = {
-				host: 'prototype.projectmaelstrom.com',
-				port: 5000,
-				path: "/module/token/exchange?code=" + req.query.code,
-				method: 'GET'
-			};
-		console.log("getting", options)
-		http.get(options, function (agent) {
-			var data = ''
-			agent.on('data', function (chunk) {
-				data += chunk;
-			});
-			agent.on('end', function () {
-				res.end("Code: " + req.query.code + " exchanged for Token: " + data);
-			});
-			
-		}).on('error', function (e) {
-			res.end("Error: " + e.message);
-		});
-	})
+		exchangeCode(req.query.code)(function(token){
+			res.send(req.query.code + " exchanged to token " + token);
+		})
+	});
 };
