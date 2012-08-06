@@ -4,6 +4,12 @@ block scripts
 	script(src=apiHost + "/js/api.js", type="text/javascript")
 
 block content
+
+	if info
+		p Info: #{info}
+	if error
+		p Error: #{error}
+
 	if name
 		p U R #{name}
 	else

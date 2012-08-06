@@ -18,6 +18,8 @@ function exchangeCode(code) {
 			def.resolve(data);
 		});
 		
+	}).on('error', function(err) {
+		def.resolve({error: String(err)})
 	});
 
 	return def.promise;
@@ -40,6 +42,8 @@ function getTokenInfo(token) {
 			def.resolve(JSON.parse(data));
 		});
 		
+	}).on('error', function (err) {
+		def.resolve({error: String(err)})
 	});
 
 	return def.promise;	
@@ -54,10 +58,15 @@ module.exports = function(app){
 	function renderIndex(req, res) {
 		if (req.session.token) {
 			getTokenInfo(req.session.token)(function (info) {
-				res.render('index', {name: info.name, apiHost: apiHost, selfHost: selfHost});	
-			});
+				console.log("render index", info);
+				
+				var name = info ? info.name : null;
+
+				res.render('index', {name: name, apiHost: apiHost, selfHost: selfHost});	
+			}).end();
 		} else {
-			res.render('index', {apiHost: apiHost, selfHost: selfHost});
+			console.log("render nameless index");
+			res.render('index', {name: null, apiHost: apiHost, selfHost: selfHost});
 		}
 		
 	};
@@ -67,9 +76,15 @@ module.exports = function(app){
 	app.post('/', renderIndex);
 
 	app.get('/callback', function (req, res) {
-		exchangeCode(req.query.code)(function (token) {
-			req.session.token = token;
-			res.redirect('/')
-		});
+		if (req.query.code) {
+			exchangeCode(req.query.code)(function (token) {
+				req.session.token = token;
+				res.redirect('/')
+			});	
+		} else {
+			req.flash('info', "You don't like us? You didn't approve the app!");
+			res.redirect('/');
+		}
+		
 	});
 };
