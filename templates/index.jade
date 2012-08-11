@@ -21,6 +21,6 @@ block content
 		maelstrom.configure({
 			appid: "50121884bee6cac105000028",
 			callback: window.location.protocol + "//" + window.location.host + "/callback",
-			localTest: true
+			localTest: window.location.port == 4000
 		});
 		maelstrom.loginWidget();
