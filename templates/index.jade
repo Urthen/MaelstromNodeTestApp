@@ -1,8 +1,5 @@
 extends base
 
-block scripts
-	script(src=apiHost + "/js/api.js", type="text/javascript")
-
 block content
 
 	if info
@@ -15,12 +12,4 @@ block content
 	else
 		p LOG DAT SHIT IN
 
-	#MaelstromLogin INJECT CONTENT HERE DOOD!
-
-	script(type="text/javascript")
-		maelstrom.configure({
-			appid: "#{appid}",
-			callback: window.location.protocol + "//" + window.location.host + "/callback",
-			localTest: window.location.port == 4000
-		});
-		maelstrom.loginWidget();
+	a(href="/auth/maelstrom") Connect with Maelstrom

@@ -1,87 +1,45 @@
-var http = require('http'),
-	deferred = require('deferred'),
-	isProd = process.env.NODE_ENV == 'production';
+var passport = require('passport'),
+	MaelstromStrategy = require('passport-maelstrom').Strategy
+	isProd = process.env.NODE_ENV == 'production',
+	apiHost = isProd ? 'http://prototype.projectmaelstrom.com' : 'http://prototype.projectmaelstrom.com',
+	selfHost = isProd ? 'http://nodetest.projectmaelstrom.com' : 'http://nodetest.projectmaelstrom.com:4000';
 
-function exchangeCode(code) {
-	var options = {
-			host: 'prototype.projectmaelstrom.com',
-			port: isProd ? 80 : 5000,
-			path: "/module/token/exchange?code=" + code + "&secret=" + process.env.APP_SECRET,
-			method: 'GET'
-		},
-		def = deferred();
-	console.log("exchanging token at ", options)
-	http.get(options, function (agent) {
-		var data = ''
-		agent.on('data', function (chunk) {
-			data += chunk;
-		});
-		agent.on('end', function () {
-			def.resolve(data);
-		});
-		
-	}).on('error', function(err) {
-		def.resolve({error: String(err)})
-	});
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
 
-	return def.promise;
-}
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
-function getTokenInfo(token) {
-	var options = {
-			host: 'prototype.projectmaelstrom.com',
-			port: isProd ? 80 : 5000,
-			path: "/module/token/info?token=" + token + "&secret=" + process.env.APP_SECRET,
-			method: 'GET'
-		},
-		def = deferred();
-	http.get(options, function (agent) {
-		var data = ''
-		agent.on('data', function (chunk) {
-			data += chunk;
-		});
-		agent.on('end', function () {
-			def.resolve(JSON.parse(data));
-		});
-		
-	}).on('error', function (err) {
-		def.resolve({error: String(err)})
-	});
-
-	return def.promise;	
-}
+passport.use(new MaelstromStrategy({
+    clientID: process.env.APP_ID,
+    clientSecret: process.env.APP_SECRET,
+    callbackURL: selfHost + "/auth/maelstrom/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+  	console.log("profile:", profile)
+  	done(null, profile);
+  }
+));
 
 module.exports = function(app){
-	var apiHost = isProd ? 'http://prototype.projectmaelstrom.com' : 'http://prototype.projectmaelstrom.com:5000',
-		selfHost = isProd ? 'http://nodetest.projectmaelstrom.com' : 'http://nodetest.projectmaelstrom.com:4000';
-
-	function renderIndex(req, res) {
-		if (req.session.token) {
-			getTokenInfo(req.session.token)(function (info) {
-				var name = info ? info.name : null;
-
-				res.render('index', {name: name, apiHost: apiHost, selfHost: selfHost, appid: app.config.appid});	
-			}).end();
-		} else {
-			res.render('index', {name: null, apiHost: apiHost, selfHost: selfHost, appid: app.config.appid});
+	app.get('/', function renderIndex(req, res) {
+		var opts = {name: null, apiHost: apiHost, selfHost: selfHost, appid: app.config.appid};
+		if (req.user) {
+			opts.name = req.user.name || "Anonymous User";
 		}
-		
-	};
 
-	app.get('/', renderIndex);
-
-	app.post('/', renderIndex);
-
-	app.get('/callback', function (req, res) {
-		if (req.query.code) {
-			exchangeCode(req.query.code)(function (token) {
-				req.session.token = token;
-				res.redirect('/')
-			});	
-		} else {
-			req.flash('info', "You don't like us? You didn't approve the app!");
-			res.redirect('/');
-		}
-		
+		res.render('index', opts);
 	});
+
+	app.get('/auth/maelstrom', passport.authenticate('maelstrom'));
+
+	app.get('/auth/maelstrom/callback', passport.authenticate('maelstrom', { successRedirect: '/', failureRedirect: '/login' }));
+
+	app.get('/logout', function(req, res){
+	  req.logout();
+	  res.redirect('/');
+	});
+
 };

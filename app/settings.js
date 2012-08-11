@@ -1,4 +1,5 @@
-var express = require("express")
+var express = require("express"),
+	passport = require("passport");
 
 exports.boot = function (app, config) {
 
@@ -10,6 +11,8 @@ exports.boot = function (app, config) {
 		app.use(express.methodOverride());
 		app.use(express.cookieParser());
 		app.use(express.session({ secret: config.salt}));
+		app.use(passport.initialize());
+		app.use(passport.session());
 		app.use(express.csrf());
 		app.dynamicHelpers({
 			token: function(req, res) {
