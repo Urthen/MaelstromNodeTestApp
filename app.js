@@ -6,9 +6,11 @@ var config = {},
 config.port = port;
 config.env = process.env.NODE_ENV;
 config.salt = process.env.SALT;
+config.appid = process.env.APP_ID;
 
 // Setup Express Application
 var app = express.createServer();
+app.config = config
 require("./app/settings").boot(app, config);
 
 // Setup controllers

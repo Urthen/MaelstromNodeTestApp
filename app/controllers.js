@@ -1,10 +1,11 @@
 var http = require('http'),
-	deferred = require('deferred');
+	deferred = require('deferred'),
+	isProd = process.env.NODE_ENV == 'production';
 
 function exchangeCode(code) {
 	var options = {
 			host: 'prototype.projectmaelstrom.com',
-			port: 5000,
+			port: isProd ? 80 : 5000,
 			path: "/module/token/exchange?code=" + code,
 			method: 'GET'
 		},
@@ -28,7 +29,7 @@ function exchangeCode(code) {
 function getTokenInfo(token) {
 	var options = {
 			host: 'prototype.projectmaelstrom.com',
-			port: 5000,
+			port: isProd ? 80 : 5000,
 			path: "/module/token/info?token=" + token,
 			method: 'GET'
 		},
@@ -50,9 +51,7 @@ function getTokenInfo(token) {
 }
 
 module.exports = function(app){
-
-	var isProd = process.env.NODE_ENV == 'production',
-		apiHost = isProd ? 'http://prototype.projectmaelstrom.com' : 'http://prototype.projectmaelstrom.com:5000',
+	var apiHost = isProd ? 'http://prototype.projectmaelstrom.com' : 'http://prototype.projectmaelstrom.com:5000',
 		selfHost = isProd ? 'http://nodetest.projectmaelstrom.com' : 'http://nodetest.projectmaelstrom.com:4000';
 
 	function renderIndex(req, res) {
@@ -60,10 +59,10 @@ module.exports = function(app){
 			getTokenInfo(req.session.token)(function (info) {
 				var name = info ? info.name : null;
 
-				res.render('index', {name: name, apiHost: apiHost, selfHost: selfHost});	
+				res.render('index', {name: name, apiHost: apiHost, selfHost: selfHost, appid: app.config.appid});	
 			}).end();
 		} else {
-			res.render('index', {name: null, apiHost: apiHost, selfHost: selfHost});
+			res.render('index', {name: null, apiHost: apiHost, selfHost: selfHost, appid: app.config.appid});
 		}
 		
 	};
