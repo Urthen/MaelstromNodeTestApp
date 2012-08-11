@@ -6,10 +6,11 @@ function exchangeCode(code) {
 	var options = {
 			host: 'prototype.projectmaelstrom.com',
 			port: isProd ? 80 : 5000,
-			path: "/module/token/exchange?code=" + code,
+			path: "/module/token/exchange?code=" + code + "&secret=" + process.env.APP_SECRET,
 			method: 'GET'
 		},
 		def = deferred();
+	console.log("exchanging token at ", options)
 	http.get(options, function (agent) {
 		var data = ''
 		agent.on('data', function (chunk) {
@@ -30,7 +31,7 @@ function getTokenInfo(token) {
 	var options = {
 			host: 'prototype.projectmaelstrom.com',
 			port: isProd ? 80 : 5000,
-			path: "/module/token/info?token=" + token,
+			path: "/module/token/info?token=" + token + "&secret=" + process.env.APP_SECRET,
 			method: 'GET'
 		},
 		def = deferred();
