@@ -1,3 +1,5 @@
+.git/*
+*.jade
 static/*
 logs
 db

@@ -58,14 +58,11 @@ module.exports = function(app){
 	function renderIndex(req, res) {
 		if (req.session.token) {
 			getTokenInfo(req.session.token)(function (info) {
-				console.log("render index", info);
-				
 				var name = info ? info.name : null;
 
 				res.render('index', {name: name, apiHost: apiHost, selfHost: selfHost});	
 			}).end();
 		} else {
-			console.log("render nameless index");
 			res.render('index', {name: null, apiHost: apiHost, selfHost: selfHost});
 		}
 		

@@ -20,6 +20,7 @@ block content
 	script(type="text/javascript")
 		maelstrom.configure({
 			appid: "50121884bee6cac105000028",
-			callback: "http://nodetest.projectmaelstrom.com:4000/callback"
+			callback: window.location.protocol + "//" + window.location.host + "/callback",
+			localTest: true
 		});
 		maelstrom.loginWidget();
