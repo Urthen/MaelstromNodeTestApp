@@ -1,6 +1,8 @@
 MaelstromNodeTestApp
 ====================
 
+[View test application live!](http://nodetest.projectmaelstrom.com)
+
 Test application (node.js) for demonstration of Maelstrom Network functionality. This test application makes use of [passport-maelstrom](https://github.com/Urthen/passport-maelstrom).
 
 What is Maelstrom?
