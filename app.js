@@ -1,22 +1,14 @@
-var express = require("express");
+var express = require("express"),
+	port = process.env.PORT || 4000,
+	app = express.createServer();
 
-var config = {},
-	port = process.env.PORT || 4000;
-
-config.port = port;
-config.env = process.env.NODE_ENV;
-config.salt = process.env.SALT;
-config.appid = process.env.APP_ID;
-
-// Setup Express Application
-var app = express.createServer();
-app.config = config
-require("./app/settings").boot(app, config);
+// Setup settings
+require("./app/settings").boot(app);
 
 // Setup controllers
 require('./app/controllers')(app);
 
-// Good to go, brah
+// Good to go! Told you it was easy...
 app.listen(port, function () {
 	console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });

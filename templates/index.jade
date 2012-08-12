@@ -2,14 +2,61 @@ extends base
 
 block content
 
-	if info
-		p Info: #{info}
-	if error
-		p Error: #{error}
+	a(href="https://github.com/Urthen/MaelstromNodeTestApp")
+		img(style="position: absolute; top: 0; right: 0; border: 0;", src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png", alt="Fork me on GitHub")
 
-	if name
-		p U R #{name}
-	else
-		p LOG DAT SHIT IN
+	h1 Maelstrom Node Test Application
 
-	a(href="/auth/maelstrom") Connect with Maelstrom
+	.demo
+		if user
+			h3 Welcome Back
+			div You are logged in 
+				if user.name 
+					| as 
+					strong= user.name
+				else
+					string= Anonymously
+				|  - 
+				a(href="/logout") Log out
+		else
+			h3 Hello, new friend!
+			div Please log in by connecting with the Maelstrom Network.
+			a.connect(href="/auth/maelstrom") Connect with Maelstrom
+
+	.explain
+		h2 Wait, what is this?
+
+		p This is the Maelstrom Test Application written in 
+			a(href="http://nodejs.org/") node.js 
+			| using the 
+			code 
+				a(href="https://github.com/Urthen/passport-maelstrom") passport-maelstrom 
+			| package. 
+
+		h3 What is Maelstrom?
+		p Maelstrom is a new authentication network designed to put identity back in the hands of the user. For more information, visit 
+			a(href="http://www.projectmaelstrom.com") our home page
+			| .
+
+		h3 How can I get started with Maelstrom?
+		p It's super easy to use! How easy? You can get started working with Maelstrom in as little as 15 minutes by forking
+			| this application 
+			a(href="https://github.com/Urthen/MaelstromNodeTestApp") on Github. 
+			| This sample test application uses no complicated database software or other difficult-to-install frameworks. Get this app running on your
+			| local machine by following the simple steps in the readme file. 
+
+		p Add 
+			code passport-maelstrom 
+			| to your own applications quickly - if you have used 
+			a(href="http://passportjs.org/") passport.js 
+			| before, you already know just about everything you need! Just add 
+			code passport-maelstrom 
+			| to your 
+			code package.json 
+			| file, or alternatively install it manually with 
+			code npm install package-maelstrom
+
+
+		p Let's show you the relevant code from this test. For more complete samples, including documentation, please view the 
+			a(href="https://github.com/Urthen/MaelstromNodeTestApp") github repository.
+			script(src="https://gist.github.com/3327853.js?file=gistfile1.js", type="text/javascript")

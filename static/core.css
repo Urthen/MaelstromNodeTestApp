@@ -42,18 +42,17 @@ body, button, input, select, textarea { font-family: sans-serif; color: #222; }
  * These selection declarations have to be separate
  * Also: hot pink! (or customize the background color to match your design)
  */
-
-::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
-::selection { background: #fe57a1; color: #fff; text-shadow: none; }
+::-moz-selection { background: #BD2F23; color: #fff; text-shadow: none; }
+::selection { background: #BD2F23; color: #fff; text-shadow: none; }
 
 
 /* =============================================================================
    Links
    ========================================================================== */
 
-a { color: #33C; text-decoration: none;}
-a:visited { color: #33C; }
-a:hover { color: #44E; }
+a { color: #BD2F23; text-decoration: none;}
+a:visited { color: #BD2F23; }
+a:hover { color: #E44; }
 a:focus { outline: thin dotted; }
 
 /* Improve readability when focused and hovered in all browsers: h5bp.com/h */

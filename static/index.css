@@ -1,3 +1,44 @@
 @import "core.css";
 
-body {margin: 30px;}
+body {
+	background: #374143;
+}
+
+.main {
+	width: 50%;
+	margin-left: 25%;
+	background: rgb(240,249,255);
+}
+
+.content {
+	padding: 50px 40px;
+}
+
+.footer {
+	text-align: center;
+	padding: 25px 0 50px;
+}
+
+.connect {
+	margin-top: 5px;
+	display: inline-block;
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px solid #374143;
+  	background: #256580;
+}
+
+a.connect, a.connect:visited {
+	color: #FFEFEF;
+	text-decoration: none;
+}
+
+a.connect:hover {
+	text-decoration: underline;
+}
+
+.demo {
+	padding-bottom: 30px;
+	border-bottom: 1px solid #374143;
+	margin-bottom: 30px;
+}

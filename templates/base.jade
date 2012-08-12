@@ -8,12 +8,10 @@ html(lang="en")
 		block styles
 			link(rel="stylesheet", href="/index.css")
 		block scripts
-	body(data-csrf=token)
-		.header
-			block header
-				h1 Test App
-		.content
-			block content
-		.footer
-			block footer
-				| Project Maelstrom &copy; 2012
+	body
+		.main
+			.content
+				block content
+			.footer
+				block footer
+					| Project Maelstrom &copy; 2012
