@@ -37,9 +37,9 @@ passport.use(new MaelstromStrategy({
     clientID: APP_ID,
     clientSecret: APP_SECRET,
     callbackURL: selfHost + "/auth/maelstrom/callback",
-    authorizationURL: apiHost + "/module/login",
-  	tokenURL: apiHost + "/module/token/exchange",
-  	tokenInfoURL: apiHost + "/module/token/info"
+    authorizationURL: apiHost + "/auth/oauth/authorize",
+  	tokenURL: apiHost + "/auth/oauth/exchange",
+  	tokenInfoURL: apiHost + "/auth/info"
   },
   function(accessToken, refreshToken, profile, done) {
   	done(null, profile);
