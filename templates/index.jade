@@ -18,6 +18,11 @@ block content
 					string= Anonymously
 				|  - 
 				a(href="/logout") Log out
+
+			if user.admin
+				p You are the administrator of this application!
+			else
+				p You are not the administrator of this application.
 		else
 			h3 Hello, new friend!
 			div Please log in by connecting with the Maelstrom Network.
