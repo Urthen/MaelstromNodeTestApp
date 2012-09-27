@@ -39,7 +39,8 @@ passport.use(new MaelstromStrategy({
     callbackURL: selfHost + "/auth/maelstrom/callback",
     authorizationURL: apiHost + "/auth/oauth/authorize",
   	tokenURL: apiHost + "/auth/oauth/exchange",
-  	tokenInfoURL: apiHost + "/auth/info"
+  	tokenInfoURL: apiHost + "/auth/info",
+  	scope: "basicInfo.preferredName"
   },
   function(accessToken, refreshToken, profile, done) {
   	done(null, profile);
